@@ -18,8 +18,7 @@
   shell: podman tag localhost/enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
 - name: Push Node Image
   register: push_node  
-  shell: |
-    podman push {{ REGISTRY }}/{{ load_node.stdout }}  
+  shell: podman push {{ REGISTRY }}/{{ load_node.stdout }}  
 ##########################################################################################
 - name: Load DB Image
   register: load_db  
@@ -31,12 +30,10 @@
       
 - name: Tag DB Image
   register: tag_db  
-  shell: |
-    podman tag enea-{{ PRODUCT }}-db {{ REGISTRY }}/{{ load_db.stdout }}  
+  shell: podman tag localhost/enea-{{ PRODUCT }}-db {{ REGISTRY }}/{{ load_db.stdout }}  
 - name: Push DB image
   register: push_db
-  shell: |
-    podman push {{ REGISTRY }}/{{ load_db.stdout }}  
+  shell: podman push {{ REGISTRY }}/{{ load_db.stdout }}  
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
