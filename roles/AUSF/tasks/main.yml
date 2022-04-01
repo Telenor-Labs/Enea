@@ -7,7 +7,7 @@
 ##########################################################################################    
 - name: Load Node Image
   register: load_node  
-  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar | awk '{print $3}'|awk -F, '{print $1}'"
+  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}'"
 - name: Load Node Image Debug
   debug:
     msg: 
@@ -15,8 +15,7 @@
       
 - name: Tag Node Image
   register: tag_node  
-  shell: |
-    podman tag enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
+  shell: podman tag localhost/enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
 - name: Push Node Image
   register: push_node  
   shell: |
