@@ -1,3 +1,4 @@
+---
 - name: ENEA Deployment
   hosts: localhost
   tasks:
