@@ -1,9 +1,9 @@
 ---
 ##########################################################################################
-- name: Check current working directory
-  register: get_dir
+- name: Switch to the working directory for the CNF
+  register: cd_dir
   shell: |
-    pwd
+    cd {{ cnfDirectory }}
 ##########################################################################################
 - name: Login to OpenShift
   register: oc_login
