@@ -7,7 +7,7 @@
 ##########################################################################################    
 - name: Load Node Image
   register: load_node  
-  shell: podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar'
+  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar"
 - name: Load Node Image Debug
   debug:
     msg: 
