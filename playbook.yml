@@ -1,0 +1,8 @@
+- hosts: all
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - role: AUSF
+      tags: [ never, ausf, all-cnfs ]
+      when: inventory_hostname == "10.6.1.4"

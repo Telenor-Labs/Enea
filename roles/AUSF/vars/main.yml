@@ -1,0 +1,6 @@
+---
+# vars file for AUSF
+OC_USERNAME: test
+OC_PASSSWORD: whatever
+NAMESPACE: aaa
+OC_HOST: 123
