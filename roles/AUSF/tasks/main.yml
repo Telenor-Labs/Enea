@@ -13,11 +13,11 @@
 - name: Load Node Image
   register: load_node  
   shell: |
-    podman load -i ./images/enea-{{ PRODUCT }}-node.tar | grep -v latest | awk '{print $3}'
+    podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar | grep -v latest | awk '{print $3}'
 - name: Load Node Image Debug
   debug:
     msg: 
-      - "Image: {{ load_node.stdout }}"   
+      - "Loaded image(s): {{ load_node.stdout }}"   
       
 - name: Tag Node Image
   register: tag_node  
