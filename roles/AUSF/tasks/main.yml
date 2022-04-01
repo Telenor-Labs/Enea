@@ -5,15 +5,15 @@
   shell: |
     cd {{ cnfDirectory }}
 ##########################################################################################
-- name: Login to OpenShift
-  register: oc_login
-  shell: |
-    oc login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n {{ NAMESPACE }} {{ OC_HOST }}  
+#- name: Login to OpenShift
+#  register: oc_login
+#  shell: |
+#    oc login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n {{ NAMESPACE }} {{ OC_HOST }}  
 ##########################################################################################    
 - name: Load Node Image
   register: load_node  
   shell: |
-    $(which docker) load -i ../images/enea-{{ PRODUCT }}-node.tar | grep -v latest | awk '{print $3}'
+    podman load -i ./images/enea-{{ PRODUCT }}-node.tar | grep -v latest | awk '{print $3}'
 - name: Load Node Image Debug
   debug:
     msg: 
@@ -22,11 +22,11 @@
 - name: Tag Node Image
   register: tag_node  
   shell: |
-    $(which docker) tag enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
+    podman tag enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
 - name: Push Node Image
   register: push_node  
   shell: |
-    $(which docker) push {{ REGISTRY }}/{{ load_node.stdout }}  
+    podman push {{ REGISTRY }}/{{ load_node.stdout }}  
 ##########################################################################################
 - name: Load DB Image
   register: load_db  
