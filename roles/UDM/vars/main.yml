@@ -2,8 +2,7 @@
 # vars file for UDM
 OC_USERNAME: test
 OC_PASSSWORD: whatever
-NAMESPACE: udm
 PRODUCT: udm
 OC_HOST: 123
 cnfDirectory: UDM-3.0.2202-Update2.2202101125
-REGISTRY: TEST
+REGISTRY: test
