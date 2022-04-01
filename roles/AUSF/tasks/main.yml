@@ -24,8 +24,7 @@
 ##########################################################################################
 - name: Load DB Image
   register: load_db  
-  shell: |
-    podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-db.tar'
+  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-db.tar"
 - name: Load DB Image Debug
   debug:
     msg: 
