@@ -1,5 +1,10 @@
 ---
 ##########################################################################################
+- name: Check current working directory
+  register: get_dir
+  shell: |
+    pwd
+##########################################################################################
 - name: Login to OpenShift
   register: oc_login
   shell: |
