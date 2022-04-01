@@ -7,7 +7,7 @@
 ##########################################################################################    
 - name: Load Node Image
   register: load_node  
-  shell: podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar | grep -v latest | awk '{print $3}'
+  shell: podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar'
 - name: Load Node Image Debug
   debug:
     msg: 
@@ -25,7 +25,7 @@
 - name: Load DB Image
   register: load_db  
   shell: |
-    podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-db.tar | grep -v latest | awk '{print $3}'
+    podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-db.tar'
 - name: Load DB Image Debug
   debug:
     msg: 
