@@ -1,6 +1,5 @@
 ---
-# vars file for AUSF
-OC_USERNAME: test
-OC_PASSSWORD: whatever
-NAMESPACE: aaa
-OC_HOST: 123
+# Generic vars file
+OC_USERNAME: enea
+OC_PASSSWORD: enea123
+OC_HOST: https://api.secure.next.lab:6443

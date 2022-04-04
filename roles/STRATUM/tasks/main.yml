@@ -1,2 +1,19 @@
 ---
 # tasks file for STRATUM
+- name: Login to OpenShift
+  register: oc_login
+  shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} {{ OC_HOST }}"  
+#############################################################
+- name: Load cp image
+  registel: loadCpImage
+  shell: "podman load -i /root/Stratum/stratum_cp.tar"
+- name: Load ems image
+  registel: loadCpImage
+  shell: "podman load -i /root/Stratum/stratum_ems.tar"
+- name: Load fe image
+  registel: loadCpImage
+  shell: "podman load -i /root/Stratum/stratum_fe.tar"
+#############################################################
+- name: Run the HEAT template
+  register: runTheHeatForStratum
+  shell: helm install --timeout 900s --version 3.2.0 --values charts/values.yaml region1 charts/ --debug -n enea-udr --create-namespace

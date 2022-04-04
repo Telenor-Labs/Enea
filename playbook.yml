@@ -10,3 +10,7 @@
     - role: UDM
       tags: [ never, udm, all-cnfs ]
       when: inventory_hostname == "10.6.1.4"
+      
+    - role: STRATUM
+      tags: [ never, stratum, all-cnfs ]
+      when: inventory_hostname == "10.6.1.4"
