@@ -3,3 +3,4 @@
 OC_USERNAME: enea
 OC_PASSSWORD: enea123
 OC_HOST: https://api.secure.next.lab:6443
+REGISTRY: test
