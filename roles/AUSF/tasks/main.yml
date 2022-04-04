@@ -10,8 +10,7 @@
 - name: Load Node Image Debug
   debug:
     msg: 
-      - "Loaded image(s): {{ load_node.stdout }}"   
-      
+      - "Loaded image(s): {{ load_node.stdout }}"         
 - name: Tag Node Image
   register: tag_node  
   shell: podman tag localhost/enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
