@@ -1,8 +1,8 @@
 ---
 # vars file for UDM
-OC_USERNAME: test
-OC_PASSSWORD: whatever
+OC_USERNAME: enea
+OC_PASSSWORD: enea-123
 PRODUCT: udm
-OC_HOST: 123
+OC_HOST: https://api.mgmt.next.lab:6443
 cnfDirectory: UDM-3.0.2202-Update2.2202101125
 REGISTRY: test
