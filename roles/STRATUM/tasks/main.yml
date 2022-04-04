@@ -7,12 +7,32 @@
 - name: Load cp image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_cp.tar"
+- name: Tag cp Image
+  register: tag_db  
+  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_cp {{ REGISTRY }}/stratum_cp:3.2  
+- name: Push DB image
+  register: push_db
+  shell: podman push {{ REGISTRY }}/stratum_cp:3.2
+
 - name: Load ems image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_ems.tar"
+- name: Tag ems Image
+  register: tag_db  
+  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_ems {{ REGISTRY }}/stratum_ems:3.2  
+- name: Push DB image
+  register: push_db
+  shell: podman push {{ REGISTRY }}/stratum_cp:3.2
+
 - name: Load fe image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_fe.tar"
+- name: Tag fe Image
+  register: tag_db  
+  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_fe {{ REGISTRY }}/stratum_fe:3.2  
+- name: Push DB image
+  register: push_db
+  shell: podman push {{ REGISTRY }}/stratum_fe:3.2
 #############################################################
 - name: Run the HEAT template
   register: runTheHeatForStratum
