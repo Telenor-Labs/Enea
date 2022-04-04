@@ -2,7 +2,7 @@
 ##########################################################################################
 - name: Login to OpenShift
   register: oc_login
-  shell: "oc login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n enea-{{ PRODUCT }} {{ OC_HOST }}"  
+  shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n enea-{{ PRODUCT }} {{ OC_HOST }}"  
 ##########################################################################################    
 - name: Load Node Image
   register: load_node  
