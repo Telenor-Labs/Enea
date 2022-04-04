@@ -16,4 +16,19 @@
 #############################################################
 - name: Run the HEAT template
   register: runTheHeatForStratum
-  shell: helm install --timeout 900s --version 3.2.0 --values charts/values.yaml region1 charts/ --debug -n enea-udr --create-namespace
+  shell: helm install --timeout 900s --version 3.2.0 --values charts/values.yaml region1 charts/ --debug -n enea-udr 
+- name: Wait untill all pods are "Running"
+  register: check_running_status
+  until: check_running_status.stdout == "0"
+  retries: 100
+  delay: 60
+  changed_when: False
+  shell: "oc get pods -o wide -n enea-udr | awk {'print $3'} | grep -v 'Running' | wc -l"
+- name: Wait until all pods are Ready
+  register: check_ready_status
+  until: check_ready_status.stdout == "0"
+  retries: 100
+  delay: 60
+  changed_when: False
+  shell: "oc get pods -o wide -n enea-udr | awk {'print $2'} | grep -v '1/1' | wc -l"
+  
