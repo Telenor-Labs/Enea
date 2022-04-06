@@ -13,7 +13,8 @@
     register: files_matched
 - name: Printour file names
   loop: "{{ files_matched }}"
-  loop_control: "{{ tarFileName }}"
+  loop_control: 
+    label: "{{ tarFileName }}"
   shell: echo "$tarFileName"
 - name: Load cp image
   register: loadCpImage
