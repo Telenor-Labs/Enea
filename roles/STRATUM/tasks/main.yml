@@ -15,7 +15,9 @@
     var: files_matched.files
 
 - name: Loop through the filenames
-  shell: echo "{{ item.path }}"
+  shell: 
+  - "imageName=$(podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}')"
+  - "podman tag $imageName {{ REGISTRY }}/stratum_cp:3.2"
   loop: "{{ files_matched.files }}"
 - name: Load cp image
   register: loadCpImage
