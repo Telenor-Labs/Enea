@@ -15,7 +15,7 @@
     var: files_matched.files
 
 - name: Loop through the filenames
-  shell: echo "{{ item }}"
+  shell: echo "{{ item.path }}"
   loop: "{{ files_matched.files }}"
 - name: Load cp image
   register: loadCpImage
