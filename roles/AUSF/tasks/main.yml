@@ -4,19 +4,18 @@
   register: oc_login
   shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n enea-{{ PRODUCT }} {{ OC_HOST }}"  
 ##########################################################################################    
-- name: Load Node Image
-  register: load_node  
-  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-node.tar | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}'"
-- name: Load Node Image Debug
-  debug:
-    msg: 
-      - "Loaded image(s): {{ load_node.stdout }}"         
-- name: Tag Node Image
-  register: tag_node  
-  shell: podman tag localhost/{{ load_node.stdout }} {{ REGISTRY }}/{{ load_node.stdout }}  
-- name: Push Node Image
-  register: push_node  
-  shell: podman push {{ REGISTRY }}/{{ load_node.stdout }}  
+- name: Find tar files
+  find:
+    paths: /root/{{ cnfDirectory }}/images/
+    file_type: file
+    patterns: "*.tar"
+  register: files_matched
+- name: Loop through the tar files and load them
+  shell: |
+    imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}'
+    podman tag $imageName {{ REGISTRY }}/$imageName
+    podman push {{ REGISTRY }}/$imageName
+  loop: "{{ files_matched.files }}"
 ##########################################################################################
 - name: Load DB Image
   register: load_db  
