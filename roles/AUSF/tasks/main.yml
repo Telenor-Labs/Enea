@@ -12,7 +12,7 @@
   register: files_matched
 - name: Loop through the tar files and load them
   shell: |
-    imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}'
+    imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2})'
     podman tag $imageName {{ REGISTRY }}/$imageName
     podman push {{ REGISTRY }}/$imageName
   loop: "{{ files_matched.files }}"
