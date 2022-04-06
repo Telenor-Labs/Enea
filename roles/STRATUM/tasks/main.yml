@@ -20,7 +20,7 @@
 - name: Testing with
   shell: echo "{{ item }}"
   with_fileglob:
-    - "/root/Stratum/*.tar"
+    - "*"
 - name: Load cp image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}'"
