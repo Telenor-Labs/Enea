@@ -4,9 +4,20 @@
   register: oc_login
   shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} {{ OC_HOST }}"  
 #############################################################
+- name: Find tar files
+  find:
+    paths: /root/Stratum
+    file_type: file
+    recurse: Yes
+    patterns: "*.tar"
+    register: files_matched
+- name: Printour file names
+  loop: {{ files_matched }}
+  loop_control: {{ tarFileName }}
+  shell: echo "$tarFileName"
 - name: Load cp image
   register: loadCpImage
-  shell: "podman load -i /root/Stratum/stratum_cp.tar"
+  shell: "podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}'"
 - name: Tag cp Image
   register: tag_db  
   shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_cp {{ REGISTRY }}/stratum_cp:3.2  
