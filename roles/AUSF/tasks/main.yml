@@ -17,21 +17,6 @@
     podman push {{ REGISTRY }}/$imageName
   loop: "{{ files_matched.files }}"
 ##########################################################################################
-- name: Load DB Image
-  register: load_db  
-  shell: "podman load -i /root/{{ cnfDirectory }}/images/enea-{{ PRODUCT }}-db.tar | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}'"
-- name: Load DB Image Debug
-  debug:
-    msg: 
-      - "Image: {{ load_db.stdout }}"   
-      
-- name: Tag DB Image
-  register: tag_db  
-  shell: podman tag localhost/{{ load_node.stdout }} {{ REGISTRY }}/{{ load_db.stdout }}  
-- name: Push DB image
-  register: push_db
-  shell: podman push {{ REGISTRY }}/{{ load_db.stdout }}  
-##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
     path: "/root/{{ cnfDirectory }}/configuration.yaml"
