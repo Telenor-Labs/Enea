@@ -10,11 +10,8 @@
     file_type: file
     patterns: "*.tar"
   register: files_matched
-- name: Printour file names
-  loop: "{{ files_matched }}"
-  loop_control: 
-    label: "{{ tarFileName }}"
-  shell: echo "$tarFileName"
+- name: Printout file names
+  shell: echo "{{ files_matched.files }}"
 - name: Load cp image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}'"
