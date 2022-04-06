@@ -8,7 +8,6 @@
   find:
     paths: /root/Stratum
     file_type: file
-    recurse: Yes
     patterns: "*.tar"
     register: files_matched
 - name: Printour file names
