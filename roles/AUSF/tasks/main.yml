@@ -13,7 +13,7 @@
       - "Loaded image(s): {{ load_node.stdout }}"         
 - name: Tag Node Image
   register: tag_node  
-  shell: podman tag localhost/enea-{{ PRODUCT }}-node {{ REGISTRY }}/{{ load_node.stdout }}  
+  shell: podman tag localhost/{{ load_node.stdout }} {{ REGISTRY }}/{{ load_node.stdout }}  
 - name: Push Node Image
   register: push_node  
   shell: podman push {{ REGISTRY }}/{{ load_node.stdout }}  
@@ -28,7 +28,7 @@
       
 - name: Tag DB Image
   register: tag_db  
-  shell: podman tag localhost/enea-{{ PRODUCT }}-db {{ REGISTRY }}/{{ load_db.stdout }}  
+  shell: podman tag localhost/{{ load_node.stdout }} {{ REGISTRY }}/{{ load_db.stdout }}  
 - name: Push DB image
   register: push_db
   shell: podman push {{ REGISTRY }}/{{ load_db.stdout }}  
