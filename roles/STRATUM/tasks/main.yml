@@ -12,7 +12,7 @@
   register: files_matched
 - name: Debug
   debug:
-    msg: "{{ files_matched.files }}"
+    var: files_matched.files
 - name: Loop through the filenames
   loop: "{{ files_matched.files }}"
 - name: Load cp image
