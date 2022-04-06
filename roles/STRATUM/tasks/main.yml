@@ -16,8 +16,9 @@
 
 - name: Loop through the filenames
   shell: |
-    imageName=$(podman load -i {{ item.path }} | awk '{print $3}')
-    podman tag $imageName {{ REGISTRY }}/stratum_cp:3.2
+    imageName=$(podman load -i {{ item.path }} | awk -F/ '{print $3}')
+    podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/$imageName {{ REGISTRY }}/$imageName
+    podman push {{ REGISTRY }}/$imageName
   loop: "{{ files_matched.files }}"
 - name: Load cp image
   register: loadCpImage
