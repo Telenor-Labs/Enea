@@ -12,7 +12,8 @@
   register: files_matched
 - name: Debug
   debug:
-    var: files_matched.files
+    var: files_matched
+
 - name: Loop through the filenames
   loop: "{{ files_matched.files }}"
 - name: Load cp image
