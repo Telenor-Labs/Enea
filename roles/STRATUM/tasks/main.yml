@@ -19,7 +19,8 @@
 #  loop: "{{ files_matched.files }}"
 - name: Testing with
   shell: echo "{{ item }}"
-  with_files_matched.files: "*.tar"
+  with_fileglob:
+    - "/root/Stratum/*.tar"
 - name: Load cp image
   register: loadCpImage
   shell: "podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}'"
