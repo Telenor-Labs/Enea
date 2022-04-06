@@ -10,45 +10,12 @@
     file_type: file
     patterns: "*.tar"
   register: files_matched
-- name: Debug
-  debug:
-    var: files_matched.files
-
-- name: Loop through the filenames
+- name: Loop through the tar files and load them
   shell: |
     imageName=$(podman load -i {{ item.path }} | awk -F/ '{print $3}')
     podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/$imageName {{ REGISTRY }}/$imageName
     podman push {{ REGISTRY }}/$imageName
   loop: "{{ files_matched.files }}"
-- name: Load cp image
-  register: loadCpImage
-  shell: "podman load -i /root/Stratum/stratum_cp.tar | awk '{print $3}'"
-- name: Tag cp Image
-  register: tag_db  
-  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_cp {{ REGISTRY }}/stratum_cp:3.2  
-- name: Push DB image
-  register: push_db
-  shell: podman push {{ REGISTRY }}/stratum_cp:3.2
-
-- name: Load ems image
-  register: loadCpImage
-  shell: "podman load -i /root/Stratum/stratum_ems.tar"
-- name: Tag ems Image
-  register: tag_db  
-  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_ems {{ REGISTRY }}/stratum_ems:3.2  
-- name: Push DB image
-  register: push_db
-  shell: podman push {{ REGISTRY }}/stratum_cp:3.2
-
-- name: Load fe image
-  register: loadCpImage
-  shell: "podman load -i /root/Stratum/stratum_fe.tar"
-- name: Tag fe Image
-  register: tag_db  
-  shell: podman tag harbor.bfs.openwave.com/stratum-qe-pipeline/stratum_fe {{ REGISTRY }}/stratum_fe:3.2  
-- name: Push DB image
-  register: push_db
-  shell: podman push {{ REGISTRY }}/stratum_fe:3.2
 #############################################################
 - name: Run the HEAT template
   register: runTheHeatForStratum
