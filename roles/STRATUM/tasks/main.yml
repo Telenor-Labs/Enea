@@ -9,7 +9,6 @@
     paths: /root/Stratum
     file_type: file
     patterns: "*.tar"
-    wantList: true
   register: files_matched
 - name: Printour file names
   loop: "{{ files_matched }}"
