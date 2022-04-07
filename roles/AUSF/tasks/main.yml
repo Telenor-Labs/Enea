@@ -20,7 +20,8 @@
   register: loadingImages
 - name: Check the image names
   debug:
-    var: loadingImages.results
+    var: loadingImages.results.1.stdout
+    var: loadingImages.results.2.stdout
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
@@ -33,12 +34,12 @@
   ansible.builtin.replace:
     path: "/root/{{ cnfDirectory }}/configuration.yaml"
     regexp: 'NodeImage:.*'
-    replace: 'NodeImage: {{ REGISTRY }}/{{ load_node.stdout }}'
+    replace: 'NodeImage: {{ REGISTRY }}/{{ loadImages.results.2.stdout }}'
 - name: Replace DB Image in configuration.yaml
   ansible.builtin.replace:
     path: "/root/{{ cnfDirectory }}/configuration.yaml"
-    regexp: 'DBImage: .enea-{{ PRODUCT }}-node.*'
-    replace: 'DBImage: {{ REGISTRY }}/.enea-{{ PRODUCT }}-node.*'
+    regexp: 'DBImage:.*'
+    replace: 'DBImage: {{ REGISTRY }}/{{ loadImages.results.1.stdout }}'
 ##########################################################################################
 - name: Execute generate.bash
   register: generate_bash  
