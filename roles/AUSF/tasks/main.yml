@@ -18,7 +18,8 @@
   loop: "{{ files_matched.files }}"
   register: loadingImages
 - name: Check the image names
-  var: loadingImages.stdout
+  debug:
+    var: loadingImages.stdout
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
