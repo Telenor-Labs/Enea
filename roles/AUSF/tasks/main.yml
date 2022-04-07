@@ -21,7 +21,7 @@
 - name: Check the image names
   debug:
     var: loadingImages.results.1.stdout
-    var: loadingImages.results.2.stdout
+    var: loadingImages.results.1.stdout
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
