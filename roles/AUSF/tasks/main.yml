@@ -19,7 +19,7 @@
   register: loadingImages
 - name: Check the image names
   debug:
-    var: loadingImages.stdout
+    var: loadingImages.results
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
