@@ -16,6 +16,9 @@
     podman tag $imageName {{ REGISTRY }}/$imageName
     podman push {{ REGISTRY }}/$imageName
   loop: "{{ files_matched.files }}"
+  register: loadingImages
+- name: Check the image names
+  var: loadingImages.stdout
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
@@ -32,8 +35,8 @@
 - name: Replace DB Image in configuration.yaml
   ansible.builtin.replace:
     path: "/root/{{ cnfDirectory }}/configuration.yaml"
-    regexp: 'DBImage:.*'
-    replace: 'DBImage: {{ REGISTRY }}/{{ load_db.stdout }}'
+    regexp: 'DBImage: .enea-{{ PRODUCT }}-node.*'
+    replace: 'DBImage: {{ REGISTRY }}/.enea-{{ PRODUCT }}-node.*'
 ##########################################################################################
 - name: Execute generate.bash
   register: generate_bash  
