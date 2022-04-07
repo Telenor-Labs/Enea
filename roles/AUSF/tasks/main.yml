@@ -15,6 +15,7 @@
     imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}')
     podman tag $imageName {{ REGISTRY }}/$imageName
     podman push {{ REGISTRY }}/$imageName
+    echo $imageName
   loop: "{{ files_matched.files }}"
   register: loadingImages
 - name: Check the image names
