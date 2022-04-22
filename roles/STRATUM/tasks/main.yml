@@ -26,7 +26,7 @@
   retries: 100
   delay: 60
   changed_when: False
-  shell: "oc get pods -o wide -n enea-udr | awk {'print $3'} | grep -v 'Running' | wc -l"
+  shell: "oc get pods -o wide -n enea-udr | grep stratum | awk {'print $3'} | grep -v 'Running' | wc -l"
 - name: Wait until all pods are Ready
   register: check_ready_status
   until: check_ready_status.stdout == "0"
