@@ -19,7 +19,9 @@
 #############################################################
 - name: Run the HEAT template
   register: runTheHeatForStratum
-  shell: helm install --timeout 900s --version 3.2.0 --values /root/Stratum/charts/values.yaml region1 /root/Stratum/charts/ --debug -n enea-udr 
+  shell: |
+    stratumInstalled=$(oc get pods -nenea-udr)
+    if [[ $stratumInstalled == "" ]];then helm install --timeout 900s --version 3.2.0 --values /root/Stratum/charts/values.yaml region1 /root/Stratum/charts/ --debug -n enea-udr ;fi
 - name: Wait untill all pods are "Running"
   register: check_running_status
   until: check_running_status.stdout == "0"
