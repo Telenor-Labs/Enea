@@ -94,8 +94,38 @@
   changed_when: False
   shell: "oc exec -it -n {{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- tail -n 10 /opt/netzwert/log/platform_run_{{ PRODUCT }}-oam-0.log | grep 'DEPLOYMENT STATUS: Done.' | wc -l"    
 ##########################################################################################    
-- name: Reload the blueprint configuration
+- name: Update the configuration for AUSF
+  when: PRODUCT == "aaa"
   shell: |
-    oc cp /root/{{ cnfDirectory }}/blueprint/blueprint.zip {{ NAMESPACE }}/{{ PRODUCT }}-oam-0:blueprint.zip
+    ausfIp=$(oc get svc -nenea-ausf | grep fe-ausf | awk '{print $3}')
+    cd /root/{{ cnfDirectory }}/blueprint/{{ NAMESPACE }}
+    /bin/cp -f ../template/NRFClient_NRFClientProfileConfig_AusfNRFClientProfileConfig_129_A .
+    sed -i "s/###AUSF_IP_ADDRESS/$ausfIp/g" NRFClient_NRFClientProfileConfig_AusfNRFClientProfileConfig_129_A
+- name: Update the configuration for UDM
+  when: PRODUCT == "udm"
+  shell: |
+    cd /root/{{ cnfDirectory }}/blueprint/{{ NAMESPACE }}
+    /bin/cp -f ../template/NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A .
+    feIp=$(oc get svc -nenea-udm | grep fe-ueau | awk '{print $3}')
+    sed -i "s/###UEAU/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-subs | awk '{print $3}')
+    sed -i "s/###SDM/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-ueco | awk '{print $3}')
+    sed -i "s/###UECM/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-mt | awk '{print $3}')
+    sed -i "s/###MT/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-param | awk '{print $3}')
+    sed -i "s/###PP/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-notif | awk '{print $3}')
+    sed -i "s/###Notif/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+    feIp=$(oc get svc -nenea-udm | grep fe-event | awk '{print $3}')
+    sed -i "s/###EE/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_122_A
+- name: Reload the blueprint configuration
+  when: PRODUCT == "udm"
+  shell: |
+    cd /root/{{ cnfDirectory }}/blueprint/{{ NAMESPACE }}
+    zip blueprint.zip *
+    oc cp /root/{{ cnfDirectory }}/blueprint/{{ NAMESPACE }}/blueprint.zip {{ NAMESPACE }}/{{ PRODUCT }}-oam-0:blueprint.zip
     oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/AAA/bin/loadSystemState -fn blueprint.zip
     oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/bin/do-cmd 'aaa stop' +all -p
+    rm -f *.zip
