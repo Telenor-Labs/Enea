@@ -34,4 +34,10 @@
   delay: 60
   changed_when: False
   shell: "oc get pods -o wide -n enea-udr | awk {'print $2'} | grep -v '1/1' | wc -l"
-  
+#############################################################
+- name: Load schema
+  shell: |
+    oc exec -it -nenea-udr region1-stratum-ild-0 -- bash
+    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/dseroot.ldif
+    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/schema.ldif
+    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/notification.ldif  
