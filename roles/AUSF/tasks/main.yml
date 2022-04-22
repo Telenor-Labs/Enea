@@ -94,3 +94,8 @@
   changed_when: False
   shell: "oc exec -it -n {{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- tail -n 10 /opt/netzwert/log/platform_run_{{ PRODUCT }}-oam-0.log | grep 'DEPLOYMENT STATUS: Done.' | wc -l"    
 ##########################################################################################    
+- name: Reload the blueprint configuration
+  shell: |
+    oc cp /root/{{ cnfDirectory }}/blueprint/blueprint.zip {{ NAMESPACE }}/{{ PRODUCT }}-oam-0:blueprint.zip
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/AAA/bin/loadSystemState -fn blueprint.zip
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/bin/do-cmd 'aaa stop' +all -p
