@@ -36,7 +36,7 @@
   retries: 100
   delay: 60
   changed_when: False
-  shell: "oc get pods -o wide -n {{ NAMESPACE }} | awk {'print $2'} | grep -v '1/1' | wc -l"
+  shell: "oc get pods -o wide -n {{ NAMESPACE }} | tail -n +2 | awk {'print $2'} | grep -v '1/1' | wc -l"
 #############################################################
 - name: Load schema
   shell: |
