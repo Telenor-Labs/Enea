@@ -40,9 +40,8 @@
 #############################################################
 - name: Load schema
   shell: |
-    oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- bash
-    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/dseroot.ldif
-    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/schema.ldif
-    ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/notification.ldif  
+    oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/dseroot.ldif
+    oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/schema.ldif
+    oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/notification.ldif  
 
 
