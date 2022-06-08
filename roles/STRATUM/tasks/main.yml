@@ -6,7 +6,7 @@
 #############################################################
 - name: Find tar files
   find:
-    paths: /root/Stratum
+    paths: /root/StratumNew
     file_type: file
     patterns: "*.tar"
   register: files_matched
@@ -20,26 +20,27 @@
 - name: Run the HEAT template
   register: runTheHeatForStratum
   shell: |
-    stratumInstalled=$(oc get pods -nenea-udr)
-    if [[ $stratumInstalled == "" ]];then helm install --timeout 900s --version 3.2.0 --values /root/Stratum/charts/values.yaml region1 /root/Stratum/charts/ --debug -n enea-udr ;fi
+    sed -i "s/namespace:.*/namespace: {{ NAMESPACE }}/g" /root/StratumNew/stratum/values.yaml
+    stratumInstalled=$(oc get pods -n{{ NAMESPACE }})
+    if [[ $stratumInstalled == "" ]];then helm install --timeout 900s --version 3.2.0 --values /root/StratumNew/stratum/values.yaml region1 /root/StratumNew/stratum/ --debug -n {{ NAMESPACE }} ;fi
 - name: Wait untill all pods are "Running"
   register: check_running_status
   until: check_running_status.stdout == "0"
   retries: 100
   delay: 60
   changed_when: False
-  shell: "oc get pods -o wide -n enea-udr | grep stratum | awk {'print $3'} | grep -v 'Running' | wc -l"
+  shell: "oc get pods -o wide -n {{ NAMESPACE }} | grep stratum | awk {'print $3'} | grep -v 'Running' | wc -l"
 - name: Wait until all pods are Ready
   register: check_ready_status
   until: check_ready_status.stdout == "0"
   retries: 100
   delay: 60
   changed_when: False
-  shell: "oc get pods -o wide -n enea-udr | awk {'print $2'} | grep -v '1/1' | wc -l"
+  shell: "oc get pods -o wide -n {{ NAMESPACE }} | awk {'print $2'} | grep -v '1/1' | wc -l"
 #############################################################
 - name: Load schema
   shell: |
-    oc exec -it -nenea-udr region1-stratum-ild-0 -- bash
+    oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- bash
     ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/dseroot.ldif
     ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/schema.ldif
     ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/notification.ldif  
