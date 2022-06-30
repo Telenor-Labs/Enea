@@ -56,9 +56,16 @@
 #  shell: |
 #    sed -i -e 's/PRODUCT\s*:\s*{{ PRODUCT }}/PRODUCT : {{ PRODUCT }}/g' ../deployment/* 
 ##########################################################################################
+- name: Change NAMESPACE
+  ansible.builtin.replace:
+    path: "/root/{{ cnfDirectory }}/deployment/*.yaml"
+    regexp: 'namespace:.*'
+    replace: 'namespace: {{ NAMESPACE }}'
 - name: Deploy 
   register: deployment  
-  shell: "oc apply -f /root/{{ cnfDirectory }}/deployment/"    
+  shell: |
+    "oc apply -f /root/{{ cnfDirectory }}/namespace/"    
+    "oc apply -f /root/{{ cnfDirectory }}/deployment/"    
 ##########################################################################################    
 - name: Wait untill all pods are "Running"
   register: check_running_status
