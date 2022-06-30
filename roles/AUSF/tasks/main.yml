@@ -4,8 +4,10 @@
   register: oc_login
   shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n {{ NAMESPACE }} {{ OC_HOST }}"  
 ##########################################################################################    
-- name: Delete namespace
-  shell: "kubectl delete ns {{ NAMESPACE }}"
+- name: Delete all resources
+  shell: |
+    kc get all -nenea-defense-ausf | grep deployment|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh
+    kc get all -nenea-defense-ausf | grep statefulset|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh    
 - name: Find tar files
   find:
     paths: /root/{{ cnfDirectory }}/images/
