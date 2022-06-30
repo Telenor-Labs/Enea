@@ -4,6 +4,8 @@
   register: oc_login
   shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n {{ NAMESPACE }} {{ OC_HOST }}"  
 ##########################################################################################    
+- name: Delete namespace
+  shell: "kc delete ns {{ NAMESPACE }}"
 - name: Find tar files
   find:
     paths: /root/{{ cnfDirectory }}/images/
@@ -57,12 +59,7 @@
 #    sed -i -e 's/PRODUCT\s*:\s*{{ PRODUCT }}/PRODUCT : {{ PRODUCT }}/g' ../deployment/* 
 ##########################################################################################
 - name: Change NAMESPACE
-  shell: |
-    echo "Before:"
-    grep -r namespace
-    sed -i "s/namespace.*/namespace: {{ NAMESPACE }}/g" /root/{{ cnfDirectory }}/deployment/*
-    echo "After:"
-    grep -r namespace
+  shell: 'sed -i "s/namespace.*/namespace: {{ NAMESPACE }}/g" /root/{{ cnfDirectory }}/deployment/*'
 - name: Deploy 
   register: deployment  
   shell: |
