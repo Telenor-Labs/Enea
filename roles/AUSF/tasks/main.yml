@@ -5,7 +5,7 @@
   shell: "$(which oc) login -u {{ OC_USERNAME }} -p {{ OC_PASSSWORD }} -n {{ NAMESPACE }} {{ OC_HOST }}"  
 ##########################################################################################    
 - name: Delete namespace
-  shell: "kc delete ns {{ NAMESPACE }}"
+  shell: "kubectl delete ns {{ NAMESPACE }}"
 - name: Find tar files
   find:
     paths: /root/{{ cnfDirectory }}/images/
