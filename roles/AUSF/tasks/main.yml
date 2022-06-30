@@ -57,10 +57,12 @@
 #    sed -i -e 's/PRODUCT\s*:\s*{{ PRODUCT }}/PRODUCT : {{ PRODUCT }}/g' ../deployment/* 
 ##########################################################################################
 - name: Change NAMESPACE
-  ansible.builtin.replace:
-    path: "/root/{{ cnfDirectory }}/deployment/*.yaml"
-    regexp: 'namespace:.*'
-    replace: 'namespace: {{ NAMESPACE }}'
+  shell: |
+    echo "Before:"
+    grep -r namespace
+    sed -i "s/namespace.*/namespace: {{ NAMESPACE }}/g" /root/{{ cnfDirectory }}/deployment/*
+    echo "After:"
+    grep -r namespace
 - name: Deploy 
   register: deployment  
   shell: |
