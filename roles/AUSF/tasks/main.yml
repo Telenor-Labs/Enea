@@ -65,8 +65,8 @@
 - name: Change SDM and UECM to Port 80 for UDM
   when: PRODUCT == "udm"
   shell: |
-    sed -i "s/  - port: 18083/  - port: 80\n    targetPort: 18083/g" k8s-udm-fe-UEContextManagement.yaml
-    sed -i "s/  - port: 18085/  - port: 80\n    targetPort: 18085/g" k8s-udm-fe-SubscriberDataManagement.yaml
+    sed -i "s/  - port: 18083/  - port: 80\n    targetPort: 18083/g" /root/{{ cnfDirectory }}/deployment/k8s-udm-fe-UEContextManagement.yaml
+    sed -i "s/  - port: 18085/  - port: 80\n    targetPort: 18085/g" /root/{{ cnfDirectory }}/deployment/k8s-udm-fe-SubscriberDataManagement.yaml
 - name: Deploy 
   register: deployment  
   shell: "/usr/bin/oc apply -f /root/{{ cnfDirectory }}/deployment/"    
