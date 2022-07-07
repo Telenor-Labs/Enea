@@ -6,8 +6,8 @@
 ##########################################################################################    
 - name: Delete all resources
   shell: |
-    kubectl get all -nenea-defense-ausf | grep deployment|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh
-    kubectl get all -nenea-defense-ausf | grep statefulset|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh    
+    kubectl get all -n{{ NAMESPACE }} | grep deployment|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh
+    kubectl get all -n{{ NAMESPACE }} | grep statefulset|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh    
 - name: Find tar files
   find:
     paths: /root/{{ cnfDirectory }}/images/
