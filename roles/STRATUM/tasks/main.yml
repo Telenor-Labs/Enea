@@ -21,8 +21,9 @@
   register: runTheHeatForStratum
   shell: |
     sed -i "s/namespace:.*/namespace: {{ NAMESPACE }}/g" /root/StratumNew/stratum/values.yaml
-    stratumInstalled=$(oc get pods -n{{ NAMESPACE }})
-    if [[ $stratumInstalled == "" ]];then helm install --timeout 900s --version 3.2.0 --values /root/StratumNew/stratum/values.yaml region1 /root/StratumNew/stratum/ --debug -n {{ NAMESPACE }} ;fi
+    helm uninstall region1 -n enea-udr
+    oc get pvc -nenea-udr | awk '{print "oc delete pvc "$1" -nenea-udr"}' | sh
+    helm install --timeout 900s --version 3.2.0 --values /root/StratumNew/stratum/values.yaml region1 /root/StratumNew/stratum/ --debug -n {{ NAMESPACE }} ;fi
 - name: Wait untill all pods are "Running"
   register: check_running_status
   until: check_running_status.stdout == "0"
