@@ -85,18 +85,6 @@
   delay: 60
   changed_when: False
   shell: "oc get pods -o wide -n {{ NAMESPACE }} | grep -e \"{{ PRODUCT }}\\|a-db\" | awk {'print $2'} | grep -v '1/1' | wc -l"
-- name: Pause for 2 minutes to just in case new pods appear
-  pause:
-    minutes: 2
-  
-- name: Wait again until all pods are Ready
-  register: check_ready_status2
-  until: check_ready_status2.stdout == "0"
-  retries: 100
-  delay: 60
-  changed_when: False
-  shell: "oc get pods -o wide -n {{ NAMESPACE }} | grep -e \"{{ PRODUCT }}\\|a-db\" | awk {'print $2'} | grep -v '1/1' | wc -l"
-  
 - name: Wait for DEPLOYMENT STATUS DONE on oam-0
   register: check_deployment_done
   until: check_deployment_done.stdout == "1"
