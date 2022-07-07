@@ -107,7 +107,7 @@
   shell: |
     cd /root/{{ cnfDirectory }}/blueprint/config
     rm -rf *
-    /bin/cp -f ../template/NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_Telenor .
+    /bin/cp -f ../template/* .
     feIp=$(oc get svc -nenea-udm | grep fe-ueau | awk '{print $3}')
     sed -i "s/###UEAU/$feIp/g" NRFClient_NRFClientProfileConfig_UdmNRFClientProfileConfig_Telenor
     feIp=$(oc get svc -nenea-udm | grep fe-subs | awk '{print $3}')
