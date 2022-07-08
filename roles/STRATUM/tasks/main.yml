@@ -6,7 +6,7 @@
 #############################################################
 - name: Find tar files
   find:
-    paths: /root/StratumNew
+    paths: /root/stratum329
     file_type: file
     patterns: "*.tar"
   register: files_matched
@@ -20,11 +20,18 @@
 - name: Run the HEAT template
   register: runTheHeatForStratum
   shell: |
-    sed -i "s/namespace:.*/namespace: {{ NAMESPACE }}/g" /root/StratumNew/stratum/values.yaml
+    sed -i "s/namespace:.*/namespace: {{ NAMESPACE }}/g" /root/stratum329/stratum/values.yaml
     helm uninstall region1 -n enea-udr
     oc get pvc -nenea-udr | awk '{print "oc delete pvc "$1" -nenea-udr"}' | sh
-    helm install --timeout 900s --version 3.2.0 --values /root/StratumNew/stratum/values.yaml region1 /root/StratumNew/stratum/ --debug -n {{ NAMESPACE }} ;fi
-- name: Wait untill all pods are "Running"
+    helm install --timeout 900s --version 3.2.9 --values /root/stratum329/stratum/values.yaml region1 /root/stratum329/stratum/ --debug -n {{ NAMESPACE }}
+- name: Wait until some pods are "Running"
+  register: check_running_status
+  until: check_running_status.stdout != "0"
+  retries: 100
+  delay: 60
+  changed_when: False
+  shell: "oc get pods -o wide -n {{ NAMESPACE }} | grep stratum | awk {'print $3'} | grep 'Running' | wc -l"
+- name: Wait until all pods are "Running"
   register: check_running_status
   until: check_running_status.stdout == "0"
   retries: 100
