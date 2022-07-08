@@ -8,26 +8,26 @@
   shell: |
     kubectl get all -n{{ NAMESPACE }} | grep deployment|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh
     kubectl get all -n{{ NAMESPACE }} | grep statefulset|awk '{print "kubectl delete "$1" -n{{ NAMESPACE }}"}'|sh    
-- name: Find tar files
-  find:
-    paths: /root/{{ cnfDirectory }}/images/
-    file_type: file
-    patterns: "*.tar"
-  register: files_matched
-- name: Loop through the tar files and load them
-  shell: |
-    imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}')
-    podman tag $imageName {{ REGISTRY }}/$imageName
-    podman push {{ REGISTRY }}/$imageName
-    echo $imageName
-  loop: "{{ files_matched.files }}"
-  register: loadingImages
-- name: Check the image names
-  debug:
-    var: loadingImages.results.0.stdout
-- name: Check the image names
-  debug:
-    var: loadingImages.results.1.stdout
+#- name: Find tar files
+#  find:
+#    paths: /root/{{ cnfDirectory }}/images/
+#    file_type: file
+#    patterns: "*.tar"
+#  register: files_matched
+#- name: Loop through the tar files and load them
+#  shell: |
+#    imageName=$(podman load -i {{ item.path }} | awk '{print $3}'|awk -F, '{print $1}'|awk -F/ '{print $2}')
+#    podman tag $imageName {{ REGISTRY }}/$imageName
+#    podman push {{ REGISTRY }}/$imageName
+#    echo $imageName
+#  loop: "{{ files_matched.files }}"
+#  register: loadingImages
+#- name: Check the image names
+#  debug:
+#    var: loadingImages.results.0.stdout
+#- name: Check the image names
+#  debug:
+#    var: loadingImages.results.1.stdout
 ##########################################################################################
 - name: Replace License in configuration.yaml
   ansible.builtin.replace:
@@ -36,16 +36,16 @@
     replace: 'License: {{ LICENSE }}'
   when: LICENSE is defined   
   
-- name: Replace Node Image in configuration.yaml
-  ansible.builtin.replace:
-    path: "/root/{{ cnfDirectory }}/configuration.yaml"
-    regexp: 'NodeImage:.*'
-    replace: 'NodeImage: {{ REGISTRY }}/{{ loadingImages.results.1.stdout }}'
-- name: Replace DB Image in configuration.yaml
-  ansible.builtin.replace:
-    path: "/root/{{ cnfDirectory }}/configuration.yaml"
-    regexp: 'DBImage:.*'
-    replace: 'DBImage: {{ REGISTRY }}/{{ loadingImages.results.0.stdout }}'
+#- name: Replace Node Image in configuration.yaml
+#  ansible.builtin.replace:
+#    path: "/root/{{ cnfDirectory }}/configuration.yaml"
+#    regexp: 'NodeImage:.*'
+#    replace: 'NodeImage: {{ REGISTRY }}/{{ loadingImages.results.1.stdout }}'
+#- name: Replace DB Image in configuration.yaml
+#  ansible.builtin.replace:
+#    path: "/root/{{ cnfDirectory }}/configuration.yaml"
+#    regexp: 'DBImage:.*'
+#    replace: 'DBImage: {{ REGISTRY }}/{{ loadingImages.results.0.stdout }}'
 ##########################################################################################
 - name: Execute generate.bash
   register: generate_bash  
@@ -131,3 +131,15 @@
     oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/AAA/bin/loadSystemState -fn blueprint.zip
     oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- /usr/local/netzwert/bin/do-cmd 'aaa stop' +all -p
     rm -f *.zip
+- name: Delete the NRF Registration
+  ignore_errors: yes
+  shell: |
+    nfInstanceId=$(oc exec -it -nenea-udm udm-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-disc/v1/nf-instances?target-nf-type=AUS&requester-nf-type=AMF' --http2-prior-knowledge | jq .nfInstances | jq .[] | jq .nfInstanceId)
+    oc exec -it -nenea-udm udm-oam-0 -- curl --request DELETE --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/'${nfInstanceId} --http2-prior-knowledge
+- name: Check NRF registration
+  register: check_nrf_registration
+  until: check_nrf_registration.stdout == "1"
+  retries: 100
+  delay: 60
+  changed_when: False
+  shell: "oc exec -it -nenea-udm udm-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-disc/v1/nf-instances?target-nf-type=AUSF&requester-nf-type=AMF' --http2-prior-knowledge |grep REGISTERED|wc -l"
