@@ -1,0 +1,5 @@
+---
+##########################################################################################    
+- name: Provision the defense SIMS
+  shell: |
+    /root/provisioning/provisionDefenseAll.sh
