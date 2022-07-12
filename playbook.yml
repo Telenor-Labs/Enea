@@ -15,6 +15,6 @@
       tags: [ never, stratum, all-cnfs ]
       when: inventory_hostname == "10.6.1.4"
       
-      - role: Provisioning
+    - role: Provisioning
       tags: [ never, stratum, all-cnfs ]
       when: inventory_hostname == "10.6.1.4"
