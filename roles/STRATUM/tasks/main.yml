@@ -52,6 +52,7 @@
     oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/sdmce/SystemActivePath/schema/schema.ldif
     oc exec -it -n{{ NAMESPACE }} region1-stratum-ild-0 -- ldapadd -D cn=root -w secret -H ldap://localhost:3389/ -f /opt/opwv/notification.ldif  
 - name: Configure NRF
+  shell: |
     emsName=$(oc get pods -n {{ NAMESPACE }} | grep ems01|awk '{print $1}')
     ildIp=$(oc get svc -nenea-defense-udr | grep ild-0|awk '{print $3}')
     nrfIp=$(oc exec -it ${emsName} -n {{ NAMESPACE }} -- host {{ NRFSERVER }}|awk '{print $4}')
