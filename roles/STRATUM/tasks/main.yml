@@ -56,12 +56,12 @@
     emsName=$(oc get pods -n {{ NAMESPACE }} | grep ems01|awk '{print $1}')
     ildIp=$(oc get svc -nenea-defense-udr | grep ild-0|awk '{print $3}')
     nrfIp=$(oc exec -it ${emsName} -n {{ NAMESPACE }} -- host {{ NRFSERVER }}|awk '{print $4}')
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/NrfAddress:http%3A%2F%2F${nrfIp}"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/UdrReg:true"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/UdsfReg:false"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/ipEndPoints/Value:%5B%7B%22ipv4Address%22%3A%22${ildIp}%22%2C%22port%22%3A8001%7D%5D"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/scheme/Value:http"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/fqdn/Value:enea-ild-0"
-    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/*/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFProfile/Definition/fqdn/Value:enea-udr"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/NrfAddress:http%3A%2F%2F${nrfIp}"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/UdrReg:true"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/NRF/UdsfReg:false"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/ipEndPoints/Value:%5B%7B%22ipv4Address%22%3A%22${ildIp}%22%2C%22port%22%3A8001%7D%5D"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/scheme/Value:http"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFService/Definition/fqdn/Value:enea-ild-0"
+    oc exec -it ${emsName} -n {{ NAMESPACE }} -- /opt/opwv/oam/3.2/bin/OamCommandLine -h localhost -u root -p public -s SdmceSystem -c "update Complex//SDMCE/SBI/DataModel/Version/v1/NrfServiceDataType/UDR/Data/NFProfile/Definition/fqdn/Value:enea-udr"
 
 
