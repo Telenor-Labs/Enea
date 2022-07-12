@@ -4,3 +4,4 @@ PRODUCT: udm
 cnfDirectory: UDM-3.0.2202-Update2.2202101125
 NAMESPACE: enea-udm
 NRFSERVER: ocnrf-ingressgateway.oracle-nrf
+NFINSTANCEID: 118babf7-73e5-4369-9181-6dd242b4ce4a

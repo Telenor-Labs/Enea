@@ -4,3 +4,4 @@ cnfDirectory: AAA-13.0.2111-21.08.17-AF0001-21.12-P0001
 PRODUCT: aaa
 NAMESPACE: enea-ausf
 NRFSERVER: ocnrf-ingressgateway.oracle-nrf
+NFINSTANCEID: be2d8e94-6ef0-4ad9-861e-7f7872efef81

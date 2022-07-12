@@ -134,12 +134,12 @@
 - name: Delete the NRF Registration
   ignore_errors: yes
   shell: |
-    nfInstanceId=$(oc exec -it -nenea-udm udm-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-disc/v1/nf-instances?target-nf-type=AUS&requester-nf-type=AMF' --http2-prior-knowledge | jq .nfInstances | jq .[] | jq .nfInstanceId)
-    oc exec -it -nenea-udm udm-oam-0 -- curl --request DELETE --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/'${nfInstanceId} --http2-prior-knowledge
-- name: Check NRF registration
-  register: check_nrf_registration
-  until: check_nrf_registration.stdout == "1"
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request DELETE --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge
+- name: Wait until NRF registration done
+  register: check_nrf_reg
+  until: check_nrf_reg.stdout != "0"
   retries: 100
   delay: 60
   changed_when: False
-  shell: "oc exec -it -nenea-udm udm-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-disc/v1/nf-instances?target-nf-type=AUSF&requester-nf-type=AMF' --http2-prior-knowledge |grep REGISTERED|wc -l"
+  shell: |
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge | grep REGISTERED | wc -l
