@@ -134,7 +134,7 @@
 - name: Delete the NRF Registration
   ignore_errors: yes
   shell: |
-    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request DELETE --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request DELETE --url 'http://{{ NRFSERVER }}/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge
 - name: Wait until NRF registration done
   register: check_nrf_reg
   until: check_nrf_reg.stdout != "0"
@@ -142,4 +142,4 @@
   delay: 60
   changed_when: False
   shell: |
-    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request GET --url 'http://ocnrf-ingressgateway.oracle-defence-nrf/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge | grep REGISTERED | wc -l
+    oc exec -it -n{{ NAMESPACE }} {{ PRODUCT }}-oam-0 -- curl --request GET --url 'http://{{ NRFSERVER }}/nnrf-nfm/v1/nf-instances/{{ NFINSTANCEID }}' --http2-prior-knowledge | grep REGISTERED | wc -l
